@@ -1,9 +1,9 @@
 """
-- Cortical thickness distribution profiles for convex, concave, and saddle shaped points
-for all subjects. Convex and concave shaped points are identified by principal curvatures 
-and saddle shaped points are identified by negative Gaussian curvature
-
-- Effect sizes for each distribution combination are calculated per subject
+- Cortical thickness distribution profiles are extracted and plotted for all convex (gyr), concave (sulc), and saddle (neg) shaped points. 
+- Gaussian curvature is used to determine saddle shaped points and principal curvatures are used to determine convex and concave shaped points.
+- Effect sizes for each distribution combination are also available (d1_K, d2_K, d3_K) (but not published).
+- Mean and standard deviation of cortical thickness as well as p and d values are saved in a text file (average of all subjects).
+- Mean cortical thickness ratio for each subject is also saved into a text file.
 """
 
 def g_curv(input_txt, subjects_name, output_folder, max_t, min_t):
@@ -199,7 +199,9 @@ def g_curv(input_txt, subjects_name, output_folder, max_t, min_t):
         d2_K = np.append(d2_K, d2)
         d3_K = np.append(d3_K, d3)
             
-    # Plot    
+    # Plots 
+
+    # Plot distribution profiles for all convex, concave, and saddle shaped points   
     plt.figure()
     ax = sns.kdeplot(t_sulc_K, color='#31688E', shade=True, label='Pos k1, k2',bw_adjust=2, cut=0)
     ax = sns.kdeplot(t_neg_K, color='#FDE725', shade=True, label='Neg K', bw_adjust=2, cut=0)
@@ -210,7 +212,7 @@ def g_curv(input_txt, subjects_name, output_folder, max_t, min_t):
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'g_curv_all.png')
     plt.savefig(fname, dpi = 500)
     
-    # box plot
+    # Plot effect size (1)
     plt.figure()
     ax = sns.stripplot(data=[d3_K, d2_K, d1_K], linewidth=0.8, color='white', edgecolor='black', size=5, alpha=0.8)
     ax = sns.boxplot(data=[d3_K, d2_K, d1_K], fliersize=0, linewidth=1.5, width = 0.4, color='lightgrey')
@@ -219,6 +221,8 @@ def g_curv(input_txt, subjects_name, output_folder, max_t, min_t):
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'g_curv_effect_all.png')
     plt.savefig(fname, dpi = 500)
 
+
+    # Plot effect size (2)
     plt.figure()
     ax = sns.boxplot(data=[d3_K, d2_K, d1_K], fliersize=0, linewidth=1, width = 0.3, boxprops={'facecolor':'None','edgecolor':'black'},
                      whiskerprops={'color':'black'},medianprops={'color':'black'},capprops={'color':'black'})
@@ -227,7 +231,21 @@ def g_curv(input_txt, subjects_name, output_folder, max_t, min_t):
     ax.tick_params(axis = "x", which = "both", bottom = False, top = False)
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'g_curv_effect_all2.png')
     plt.savefig(fname, dpi = 500)
+
+    # Plot cortical thickness ratio (convex to concave)
+    plt.figure()
+    ax = sns.boxplot(data=[t_cc_all], fliersize=0, linewidth=1, width = 0.4, boxprops={'facecolor':'None','edgecolor':'black'},
+                     whiskerprops={'color':'black'},medianprops={'color':'black'},capprops={'color':'black'})
+    ax = sns.stripplot(data=[t_cc_all], color='black', size=4, alpha=0.4, zorder=0)
+    ax.set(ylim=(0.5, 1.5))
+    ax.tick_params(axis = "x", which = "both", bottom = False, top = False)
+    #ax.set_xlabel(int(sa_all_mean/100), fontsize=8)
+    fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'cc_mean_all.png')
+    plt.savefig(fname, dpi = 500)
     
+
+    # Save data (cortical thickness) for all convex, concave, and saddle shaped points
+
     names = [('mean_gyr', 'mean_sulc', 'mean_saddle', 'len_gyr', 'len_sulc', 'len_saddle', 'std_gyr', 'std_sulc', 'std_saddle', 'p_val1', 'p_val2', 'd1_mean', 'd2_mean', 'd3_mean')]
     results = [(np.mean(t_gyr_all), np.mean(t_sulc_all), np.mean(t_neg_all), len(t_gyr_K), len(t_sulc_K), len(t_neg_K), np.std(t_gyr_all), np.std(t_sulc_all), np.std(t_neg_all), p_val1, p_val2,
                 np.mean(d1_K), np.mean(d2_K), np.mean(d3_K))]
@@ -239,17 +257,9 @@ def g_curv(input_txt, subjects_name, output_folder, max_t, min_t):
     with open(K_name,'ab') as f:
         np.savetxt(f, results, fmt='%6.2f', delimiter=' '' ')
 
+    # Save mean cortical thickness ratio for each subject
     cc_name = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'cc_mean_all.asc')
     np.savetxt(cc_name, t_cc_all, fmt='%6.2f', delimiter=' '' ') 
 
-    plt.figure()
-    ax = sns.boxplot(data=[t_cc_all], fliersize=0, linewidth=1, width = 0.4, boxprops={'facecolor':'None','edgecolor':'black'},
-                     whiskerprops={'color':'black'},medianprops={'color':'black'},capprops={'color':'black'})
-    ax = sns.stripplot(data=[t_cc_all], color='black', size=4, alpha=0.4, zorder=0)
-    ax.set(ylim=(0.5, 1.5))
-    ax.tick_params(axis = "x", which = "both", bottom = False, top = False)
-    #ax.set_xlabel(int(sa_all_mean/100), fontsize=8)
-    fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'cc_mean_all.png')
-    plt.savefig(fname, dpi = 500)
     
     return

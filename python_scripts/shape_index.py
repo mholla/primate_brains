@@ -1,7 +1,8 @@
 """
 - Cortical thickness distribution profiles for nine shape descriptors of shape index
-for all subjects. 
-- Effect sizes are calculated for each distribution combination per subject
+for all subjects. Figure 9 of the paper.
+- Averega cortical thickness belonging to nine different shapes are saved into a text file (average for all subjects)
+- Effect sizes are also calculated for each distribution combination per subject (but not published)
 """
 
 def shape_index(input_txt, subjects_name, output_folder, max_t, min_t):

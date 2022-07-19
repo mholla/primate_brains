@@ -138,7 +138,10 @@ def sulcal_depth(input_txt, subjects_name, output_folder, max_t, min_t):
 
     s_mean_all_mean = np.mean(s_mean_all)
     s_mean_all = np.append(s_mean_all, s_mean_all_mean)
-                           
+
+    # Plots
+
+    # Plot distribution profile for all convex and concave shaped points             
     plt.figure()
     ax = sns.kdeplot(t_gyr_S, color='#FDE725', shade=True, label = 'S>0', bw_adjust=6)
     ax = sns.kdeplot(t_sulc_S, color='#31688E', shade=True, label = 'S<0', bw_adjust= 6)
@@ -148,7 +151,7 @@ def sulcal_depth(input_txt, subjects_name, output_folder, max_t, min_t):
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'sd_all_offset.png')
     plt.savefig(fname, dpi = 500)
     
-    #Box plot
+    #Plot effect size (1)
     plt.figure()
     ax = sns.stripplot(data=[d_S], linewidth=0.8, color='white', edgecolor='black', size=5, alpha=0.8)
     ax = sns.boxplot(data=[d_S], fliersize=0, linewidth=1.5, width = 0.3, color='lightgrey')
@@ -156,6 +159,7 @@ def sulcal_depth(input_txt, subjects_name, output_folder, max_t, min_t):
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder,'sd_effect_all_offset.png')
     plt.savefig(fname, dpi = 500)
 
+    #Plot effect size (2) - change box properties
     plt.figure()
     ax = sns.boxplot(data=[d_S], fliersize=0, linewidth=1, width = 0.3, boxprops={'facecolor':'None','edgecolor':'black'},
                      whiskerprops={'color':'black'},medianprops={'color':'black'},capprops={'color':'black'})
@@ -165,6 +169,9 @@ def sulcal_depth(input_txt, subjects_name, output_folder, max_t, min_t):
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 's_curv_effect_all_offset.png')
     plt.savefig(fname, dpi = 500)
     
+    #Save data
+
+    # Save average sulcal depth and standard deviation for all concave, convex, and saddle shaped points
     names = [('mean_s', 'mean_gyr', 'mean_sulc', 'std_gyr', 'std_sulc', 'mean_d')]
     results = [(np.mean(s_all), np.mean(t_gyr_S), np.mean(t_sulc_S), np.std(t_gyr_S), np.std(t_sulc_S), np.mean(d_S))]
         
@@ -172,6 +179,7 @@ def sulcal_depth(input_txt, subjects_name, output_folder, max_t, min_t):
         
     np.savetxt(S_name, names, fmt='%s', delimiter=' '' ') 
         
+    # Save average sulcal depth of all subjects
     with open(S_name,'ab') as f:
         np.savetxt(f, results, fmt='%6.2f', delimiter=' '' ')
 

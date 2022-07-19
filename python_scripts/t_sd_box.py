@@ -1,9 +1,5 @@
 """
-- Cortical thickness distribution profiles for convex, concave, and saddle shaped points
-for all subjects. Convex and concave shaped points are identified by principal curvatures 
-and saddle shaped points are identified by negative Gaussian curvature
-
-- Effect sizes for each distribution combination are calculated per subject
+- For plotting figure 6. Box plot of surface area, sulcal depth, and cortical thickness
 """
 
 def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
@@ -20,7 +16,7 @@ def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
     t_mean_all = []
     sd_mean_all = [] # average of total sulcal depth for all subjects
     sa_all_all = [] # average of total surface area for all subjects
-    vol_all_all = [] # average of total volume of the cortex for all subjects
+    #vol_all_all = [] # average of total volume of the cortex for all subjects
     
     for line in lines:
 
@@ -94,7 +90,7 @@ def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
             sa_all = np.append(sa_all, sa)
             sd_all = np.append(sd_all, sd)
             
-        vol_all = t_all*sa_all/3
+        #vol_all = t_all*sa_all/3
 
         t_mean = np.mean(t_all)
         sd_mean = np.mean(sd_all)
@@ -104,13 +100,13 @@ def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
         t_mean_all = np.append(t_mean_all, t_mean)
         sd_mean_all = np.append(sd_mean_all, sd_mean)
         sa_all_all = np.append(sa_all_all, sa_sum)
-        vol_all_all = np.append(vol_all_all, vol_sum)
+        #vol_all_all = np.append(vol_all_all, vol_sum)
 
     sa_all_mean = np.mean(sa_all_all)
-    vol_all_mean = np.mean(vol_all_all)
+    #vol_all_mean = np.mean(vol_all_all)
 
     sa_all_all_ave = np.append(sa_all_all, sa_all_mean)
-    vol_all_all_ave = np.append(vol_all_all, vol_all_mean)
+    #vol_all_all_ave = np.append(vol_all_all, vol_all_mean)
 
     sd_mean_all_ave = np.append(sd_mean_all, np.mean(sd_mean_all))
     sd_mean_all_ave = np.append(sd_mean_all_ave, np.std(sd_mean_all))
@@ -128,6 +124,7 @@ def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 't_mean_all.png')
     plt.savefig(fname, dpi = 500)
 
+    # box plot of cortical thickness (2) - change box properties
     plt.figure()
     ax = sns.boxplot(data=[t_mean_all], fliersize=0, linewidth=1, width = 0.4, boxprops={'facecolor':'None','edgecolor':'black'},
                      whiskerprops={'color':'black'},medianprops={'color':'black'},capprops={'color':'black'})
@@ -139,7 +136,6 @@ def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
     plt.savefig(fname, dpi = 500)
 
     # box plot of surface area
-
     plt.figure()
     ax = sns.boxplot(data=[sa_all_all], fliersize=0, linewidth=1, width = 0.4, boxprops={'facecolor':'None','edgecolor':'black'},
                      whiskerprops={'color':'black'},medianprops={'color':'black'},capprops={'color':'black'})
@@ -151,7 +147,6 @@ def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
     plt.savefig(fname, dpi = 500)
 
     # box plot of sulcal depth
-
     plt.figure()
     ax = sns.stripplot(data=[sd_mean_all], linewidth=0.6, color='white', edgecolor='black', size=4, alpha=0.8)
     ax = sns.boxplot(data=[sd_mean_all], fliersize=0, linewidth=1.5, width = 0.3, color='lightgrey')
@@ -161,6 +156,7 @@ def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'sd_mean_all.png')
     plt.savefig(fname, dpi = 500)
 
+    # box plot of sulcal depth (2) - change box properties
     plt.figure()
     ax = sns.boxplot(data=[sd_mean_all], fliersize=0, linewidth=1, width = 0.4, boxprops={'facecolor':'None','edgecolor':'black'},
                      whiskerprops={'color':'black'},medianprops={'color':'black'},capprops={'color':'black'})
@@ -171,11 +167,12 @@ def t_sd_box(input_txt, subjects_name, output_folder, max_t, min_t):
     fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'sd_mean2_all.png')
     plt.savefig(fname, dpi = 500)
 
+    #Save data, total surface area, volume, sulcal depth, cortical thickness for each subject
     sa_name = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'sa_all.asc')
     np.savetxt(sa_name, sa_all_all_ave, fmt='%6.2f', delimiter=' '' ') 
 
-    vol_name = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'vol_all.asc')
-    np.savetxt(vol_name, vol_all_all_ave, fmt='%6.2f', delimiter=' '' ') 
+    #vol_name = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'vol_all.asc')
+    #np.savetxt(vol_name, vol_all_all_ave, fmt='%6.2f', delimiter=' '' ') 
 
     sd_name = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'sd_mean_all.asc')
     np.savetxt(sd_name, sd_mean_all_ave, fmt='%6.2f', delimiter=' '' ') 

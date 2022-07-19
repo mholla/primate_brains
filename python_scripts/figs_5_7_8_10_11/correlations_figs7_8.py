@@ -3,7 +3,7 @@
 """
 Created on Tue Apr 19 22:36:46 2022
 
-Plotting all the correlations
+Plotting correlations between measures. Figures 7 & 8.
 
 @author: nagehan
 """
@@ -14,16 +14,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
 
-s = np.array([0.59, 1.44, 1.74, 2.40, 2.32, 2.41, 2.77, 2.55, 4.17, 4.04, 3.83, 6.92]) #average of all local depths
-t = np.array([0.91, 1.37, 1.47, 1.53, 1.84, 1.37, 1.54, 1.89, 1.97, 2.31, 2.61, 2.72]) #average of all cortical thickness
+s = np.array([0.59, 1.44, 1.74, 2.40, 2.32, 2.41, 2.77, 2.55, 4.17, 4.04, 3.83, 6.92]) #folding amplitude (average of all local sulcal depth)
+t = np.array([0.91, 1.37, 1.47, 1.53, 1.84, 1.37, 1.54, 1.89, 1.97, 2.31, 2.61, 2.72]) #cortical thickness
 gi = np.array([1.03, 1.35, 1.53, 1.69, 1.85, 1.81, 1.83, 1.77, 2.11, 2.33, 2.21, 2.53]) #gyrification index
 vol = np.array([4, 15, 28, 92, 74, 88, 77, 90, 321, 325, 432, 1200]) #volume
-sa = np.array([14, 53, 98, 210, 225, 228, 253, 261, 718, 750, 761, 2115]) #total surface area
+sa = np.array([14, 53, 98, 210, 225, 228, 253, 261, 718, 750, 761, 2115]) #surface area
 sa_alpha = sa/gi #exposed surface area
+cc = np.array([1.05, 1.19, 1.18, 1.23, 1.33, 1.18, 1.19, 1.19, 1.19, 1.35, 1.39, 1.3]) #cortical thickness ratio, convex_to_concave
 
-#cortical thickness ratio, convex_to_concave
-cc = np.array([1.05, 1.19, 1.18, 1.23, 1.33, 1.18, 1.19, 1.19, 1.19, 1.35, 1.39, 1.3])
-
+#Divide into four categories (small, medium, large, and x-large)
 cc1 = np.array([1.05, 1.19, 1.18])
 cc2 = np.array([1.23, 1.33, 1.18, 1.19, 1.19])
 cc3 = np.array([1.19, 1.35, 1.39])
@@ -59,7 +58,7 @@ gi2 = np.array([1.69, 1.85, 1.81, 1.83, 1.77])
 gi3 = np.array([2.11, 2.33, 2.21])
 gi4 = np.array([2.53])
 
-# Plotting total brain volume and total surface area for each species
+# Plotting total brain volume and total surface area for each group
 
 slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(np.log(sa), np.log(vol))
 
@@ -79,9 +78,7 @@ plt.yscale('log')
 plt.ylim(0, 10000)
 plt.savefig('sa_vol.jpg', dpi=500, bbox_inches='tight')
 
-# Plotting gyrification index and surface area for each species
-import scipy
-import scipy.stats
+# Plotting gyrification index and total surface area for each group
 
 slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(np.log(sa), gi)
 
@@ -97,10 +94,7 @@ plt.legend()
 plt.xscale('log') 
 plt.savefig('sa_gi.jpg', dpi=500, bbox_inches='tight')
 
-# Plotting alpha_surface_area and pial_surface area for each species
-
-import scipy
-import scipy.stats
+# Plotting exposed_surface_area and total surface area (pial) for each group
 
 slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(np.log(sa), np.log(sa_alpha))
 
@@ -121,9 +115,7 @@ plt.xscale('log')
 plt.yscale('log') 
 plt.savefig('sa_sa_alpha.jpg', dpi=500, bbox_inches='tight')
 
-# Plotting sulcal depth and surface area for each species
-import scipy
-import scipy.stats
+# Plotting sulcal depth (folding amplitude) and total surface area for each group
 
 slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(np.log(sa), np.log(s))
 
@@ -143,9 +135,7 @@ plt.ylim(0, 10)
 plt.legend()
 plt.savefig('area_depth.jpg', dpi=500, bbox_inches='tight')
 
-# Plotting mean cortical thickness and mean surface area for each species
-import scipy
-import scipy.stats
+# Plotting cortical thickness and total surface area for each group
 
 slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(np.log(sa), np.log(t))
 
@@ -165,8 +155,7 @@ plt.yscale('log')
 plt.ylim(0,3)
 plt.savefig('area_thickness.jpg', dpi=500, bbox_inches='tight')
 
-# plotting cortical thickness ratios to surface area for all species/groups
-#convex-concave
+# plotting cortical thickness ratio (convex-concave) to total surface area for each group
 
 slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(np.log(sa), np.log(cc))
 
@@ -183,7 +172,7 @@ plt.xscale('log')
 plt.ylim(1,1.5)
 plt.savefig('thickness_depth.jpg', dpi=500, bbox_inches='tight')
 
-# plotting cortical thickness ratio (convex to concave) to cortical thickness for all species/groups
+# plotting cortical thickness ratio (convex to concave) to cortical thickness for each group
 
 slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(t, cc)
 
@@ -200,9 +189,7 @@ plt.xlim(0.8,3)
 plt.xticks([1,1.5,2,2.5,3])
 plt.savefig('thickness_ratio.jpg', dpi=500, bbox_inches='tight')
 
-# Plotting gyrification index and cortical thickness ratio for each species
-import scipy
-import scipy.stats
+# Plotting cortical thickness ratio (convex to concave) to gyrification index for each group
 
 slope, intercept, r_value, p_value, std_err = scipy.stats.linregress(gi, cc)
 

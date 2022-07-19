@@ -1,7 +1,8 @@
 """
-- Sulcal depth (not shrunken sulcal depth) distribution profiles for convex, concave, and saddle shaped points
+- Sulcal depth (sd) (distance between alpha surface and pial surface) distribution profiles for convex, concave, and saddle shaped points
 for all subjects. Convex and concave shaped points are identified by negative and positive principal curvatures respectively
 and saddle shaped points are identified by negative Gaussian curvature
+- Mean and standard deviation of sulcal depth as well as p values are saved in a text file (average of all subjects). 
 """
 
 
@@ -135,14 +136,8 @@ def sd_curv(input_txt, subjects_name, output_folder, max_t, min_t):
     sd_all_all = np.append(sd_all_all, sd_sulc_all)
     sd_all_all = np.append(sd_all_all, sd_neg_all)
 
-    # # Plot    
-    # plt.figure()
-    # ax = sns.kdeplot(sd_sulc_K, color='#31688E', shade=True, label='Pos k1, k2',bw_adjust=2, cut=0)
-    # ax = sns.kdeplot(sd_neg_K, color='#FDE725', shade=True, label='Neg K', bw_adjust=2, cut=0)
-    # ax = sns.kdeplot(sd_gyr_K, color='#31688E', shade=True, label='Neg k1, k2', bw_adjust=2, cut=0)
-    # fname = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'sd_curv_all.png')
-    # plt.savefig(fname, dpi = 500)
-    
+    # Save mean and std of sulcal depth for all convex, concave, and saddle shaped points of all subjects 
+
     names = [('mean_gyr', 'len_gyr', 'mean_sulc', 'len_sulc', 'mean_saddle', 'len_saddle','std_gyr', 'std_sulc', 'std_saddle', 'p_val1', 'p_val2')]
     results = [(np.mean(sd_gyr_all), len(sd_gyr_hemis), np.mean(sd_sulc_all), len(sd_sulc_hemis), np.mean(sd_neg_all), len(sd_neg_hemis), np.std(sd_gyr_all), np.std(sd_sulc_all), 
         np.std(sd_neg_all), p_val1, p_val2)]
@@ -154,6 +149,7 @@ def sd_curv(input_txt, subjects_name, output_folder, max_t, min_t):
     with open(K_name,'ab') as f:
         np.savetxt(f, results, fmt='%6.2f', delimiter=' '' ')
 
+    # Save average sulcal depth for all convex, concave, and saddle shaped points for all subjects 
     sd_name = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'sd_curv_all.asc')
     np.savetxt(sd_name, sd_all_all, fmt='%6.2f', delimiter=' '' ') 
     

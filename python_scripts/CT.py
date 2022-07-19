@@ -1,5 +1,5 @@
 """
-Cortical thickness distribution profile for all subjects
+Cortical thickness distribution profile and average cortical thickness of all subjects
 """
 def CT(input_txt, subjects_name, output_folder, max_t, min_t):
     

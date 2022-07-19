@@ -1,5 +1,5 @@
 """
-Mean folding index and intrinsic curvature index for all subjects
+Average folding index, curvedness, and gyrification index for all subjects
 """
 def FI_C_GI(input_txt, subjects_name, output_folder, max_t, min_t):
     
@@ -160,6 +160,7 @@ def FI_C_GI(input_txt, subjects_name, output_folder, max_t, min_t):
     skew_gi = skew(gi_all)
     std_gi = np.std(gi_all)
     
+    # Save data (folding index, curvedness, and gyrification index)
     names = [('fi_mean', 'fi_std', 'fi_var', 'fi_skew', 'c_mean', 'c_std', 'c_var', 'gi_skew', 'gi_mean', 'gi_std', 'gi_var', 'gi_skew')]
     results = [(mean_fi, std_fi, var_fi, skew_fi, mean_c, std_c, var_c, skew_c, mean_gi, std_gi, var_gi, skew_gi)]
         
@@ -179,6 +180,7 @@ def FI_C_GI(input_txt, subjects_name, output_folder, max_t, min_t):
     gi_name = os.path.join('/afs/crc.nd.edu/group/commandlab/Nagehan/curveball_scripts/plots', output_folder, 'gi_all.asc')
     np.savetxt(gi_name, gi_all, fmt='%6.2f', delimiter=' '' ')
 
+    # Plot Gyrification Index
     plt.figure()
     ax = sns.boxplot(data=[gi_all], fliersize=0, linewidth=1, width = 0.4, boxprops={'facecolor':'None','edgecolor':'black'},
                      whiskerprops={'color':'black'},medianprops={'color':'black'},capprops={'color':'black'})
